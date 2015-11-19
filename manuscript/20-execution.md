@@ -26,7 +26,7 @@ However, class libraries and some utility tools will start to be built targettin
 
 ## Execution: DNX
 
-Instead of trying to explain what DNX is, let's first just take a look at what it does. We'll do it by looking at what it means at the process level. Take this simple C# console application:
+Whether your application targets the full .NET Framework or just .NET Core, it can be executed with DNX. Think of DNX as a host for your .NET applications, much like the way `python.exe` hosts a Python script. It's easier to understand this by looking at what it does at the process level Take this simple C# console application:
 
 ```
 using System;
