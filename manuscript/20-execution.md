@@ -6,23 +6,36 @@ To understand how ASP.NET 5.0 applications will run in production, it helps to f
 
 When .NET Framework 4.0 shipped, it came bundled with Windows Server 2012, and as a 48MB MSI for older versions of Windows. The .NET Framework contains just about everything, from UI toolkits (WPF and Windows Forms), to communication libraries (WCF/HTTP), to web application stacks (ASP.NET Web Forms). Because the framework ships as one big package, it's difficult to tease components apart, to iterate on them, or to ever remove something from them. 
 
-To combat this, and to take .NET cross platform, ".NET Core" was created. This is a new take on the CLR, which has been mercilessly factored into small assemblies that are available as packages on NuGet. 
+To combat this, and to take .NET cross platform, ".NET Core" was created. This is a new take on the CLR, which has been mercilessly factored into small assemblies that are available as packages on NuGet. It has a few benefits:
 
-When thinking about production, .NET Core has a major benefit. Remember when .NET Framework 4.5 shipped, and you really wanted to use it, but you had to wait for IT to test that it didn't break any of the other applications before you could deploy anything with it? 
+ - **Cross platform**  
+ .NET Core is supported on Windows, Linux and OSX.
+ - **Portable**  
+ .NET Core can be packaged and deployed as part of your application; no global installation required. 
+ - **Lightweight**  
+ Only the packages you actually use are imported.  
 
-With .NET Core, that problem completely goes away. Just ship whatever version of the CLR you want with your app. You can bundle your application, and the .NET Core CLR, and all your dependencies, and ship them without users needing to install anything. 
+A> ####Production benefit
+A> The portability aspects of .NET Core have a major production benefit. Remember that time .NET 4.5 shipped, and you really wanted to use features of it, but since it was an in-place upgrade you had to wait for months for it to be tested against all the enterprises other applications before you could use it? 
+A> Under .NET Core, that problem disappears. Different teams can use different versions of .NET Core without any one affecting another. 
 
-.NET Core is also cross platform, and runs on Linux and OSX and is supported by Microsoft. 
+I believe that .NET Core is the future, and the only reason .NET Framework isn't obsolete is that it will simply take a long time for types to be made cross platform, tested and ported. As the surface area of .NET Core grows, third party packages will start to target .NET Core, and eventually it will have a big enough surface area to become the default choice for all applications. 
 
-At the moment, types are being painstakingly made cross platform and tested to move them to .NET Core, so the surface area of .NET Core right now is much more limited than what's available with the full .NET Framework. I expect that in time, most of what is still relevant will eventually be available on .NET Core, but for now it's pretty focussed on ASP.NET MVC and WebAPI applications. In addition, most third party packages on NuGet target .NET Framework, not .NET Core, so it's going to take a few years before the .NET Core ecosystem has a big enough surface area to make the .NET Framework obsolete. 
+### ASP.NET 5.0 targets both
 
 For this reason, ASP.NET 5.0 targets both the .NET Framework, and .NET Core. That is, you can make use of new features and architectural improvements in ASP.NET 5.0, but still use the regular desktop .NET runtime without being limited to the .NET Core surface area. 
 
 When you sit down to build an ASP.NET 5.0 application, it's very unlikely that you'll target both .NET Core and .NET Framework. You'll make a choice:
 
-TABLE: Light and cross platform, or lots of power but stuck on Windows
+| .NET Core                         | .NET Framework           |
+|-----------------------------------|--------------------------|
+| Cross platform                    | Windows only             |
+| Lightweight                       | Heavy                    |
+| Portable (bundle with your app)   | Global, admin install    |
+| Iterates quickly                  | Slow upgrade cycle       |
+| Small surface area for now        | Lots of power            |
 
-However, class libraries and some utility tools will start to be built targetting both runtimes. 
+Class libraries and some utility tools, however, will likely targetting both runtimes. So what's needed is some way to figure out what runtime to invoke when running an application. That's where DNX comes in. 
 
 ## Execution: DNX
 
