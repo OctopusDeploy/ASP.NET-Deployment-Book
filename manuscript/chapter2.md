@@ -99,6 +99,8 @@ dnu publish --runtime active --no-source
 A> ## Room for improvement? 
 A> Personally, I think this folder structure is a bit messy and makes this seem more complicated than it should be. There's a good opportunity to hide all of these etails by keeping the shell script and batch file, but compressing the rest of the files into a NuGet package. `dnx myapp.1.0.0.nupkg` would be much neater. 
 
+Now that you are familiar with how DNX invokes processes, let's look at two HTTP server options for ASP.NET 5.0. 
+
 ## Kestrel
 
 Kestrel is a cross-platform, open source HTTP server for ASP.NET 5.0. It's built by the same team at Microsoft that built ASP.NET 5.0, and it allows ASP.NET 5.0 applications to run consistently across Windows, Linux, and OSX. 
