@@ -59,9 +59,9 @@ dnu publish --no-source
 
 Instead of creating a `.exe` as you might expect, the code is actually compiled into a `.dll` inside a directory structure. The directories contain the application bundled as a NuGet package, plus various JSON configuration files. At the root is a `.cmd` batch file which invokes the application:
 
-![A .NET console application built and running under DNX](images/myapp-taskmgr-dnx.png)
+![Output from building and publishing the console application](images/dnu-console-output.png)
 
-The batch file invokes DNX.exe (the actual batch file is longer than this - snipped for brevity):
+The batch file invokes `DNX.exe` (the actual batch file is longer than this - snipped for brevity):
 
 ```
 IF "%DNX_PATH%" == "" (
@@ -70,7 +70,7 @@ IF "%DNX_PATH%" == "" (
 @"%DNX_PATH%" --project "%~dp0packages\MyApp-DNX\1.0.0\root" --configuration Debug MyApp %*
 ```
 
-The MyApp file without the extension is a shell script, so the same application can run on Linux:
+The `MyApp` file without the extension is a shell script, so the same application can run on Linux (again, snipped):
 
 ```
 exec "dnx" --project "$DIR/packages/MyApp-DNX/1.0.0/root" --configuration Debug MyApp "$@"
@@ -84,11 +84,11 @@ java.exe myapp.jar
 
 Something you'll notice is that if you look in task manager, you won't see the name of your console app anywhere - just DNX. In fact I'm not even sure which one of these three DNX processes contains my application: 
 
-IMAGE
+![The same console application, built and running under DNX](images/myapp-taskmgr-dnx.png)
 
 A good way to figure that out is by using SysInternals Process Explorer: 
 
-IMAGE
+![SysInternals Process Explorer tells us the command-line arguments used to start DNX](images/myapp-procexp.png)
 
 One of the great benefits of DNX is that if your application targets CoreCLR, the runtime can be distributed with your application. You can now see how this can work - since the CoreCLR includes DNX.exe, all you need to do is distribute the CoreCLR runtime files with your application, and your batch file will invoke that DNX version. You can bundle the runtime and have your batch file call that simply by specifying the option when publishing:
 
