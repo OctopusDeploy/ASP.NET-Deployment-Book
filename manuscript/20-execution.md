@@ -27,13 +27,13 @@ For this reason, ASP.NET 5.0 targets both the .NET Framework, and .NET Core. Tha
 
 When you sit down to build an ASP.NET 5.0 application, it's very unlikely that you'll target both .NET Core and .NET Framework. You'll make a choice:
 
-| .NET Core                         | .NET Framework           |
-|-----------------------------------|--------------------------|
-| Cross platform                    | Windows only             |
-| Lightweight                       | Heavy                    |
-| Portable (bundle with your app)   | Global, admin install    |
-| Iterates quickly                  | Slow upgrade cycle       |
-| Small surface area for now        | Lots of power            |
+| .NET Core                         | .NET Framework                             |
+|-----------------------------------|--------------------------------------------|
+| Cross platform                    | Windows only                               |
+| Lightweight                       | Heavy                                      |
+| Portable (bundle with your app)   | Global, admin install                      |
+| Iterates quickly                  | Slow upgrade cycle                         |
+| Small surface area for now        | Everything but the kitchen sink            |
 
 Class libraries and some utility tools, however, will likely targetting both runtimes. So what's needed is some way to figure out what runtime to invoke when running an application. That's where DNX comes in. 
 
