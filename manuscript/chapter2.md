@@ -22,12 +22,86 @@ In the ASP.NET world, "Production" for an application always meant running on a 
  - **A choice of web servers**  
  IIS has been the dominant Windows web server, and is still supported for ASP.NET 5.0. But since ASP.NET 5.0 builds on top of OWIN, any HTTP server that can host OWIN can host ASP.NET 5.0. 
 
-In this chapter, we'll focus on the two HTTP servers that we expect will comprise of the majority of production ASP.NET 5.0 deployments: the new kid on the block, Kestrel, and the old, reliable IIS. 
+In this chapter, we'll first look at how the process model for DNX applications has changed. We'll then focus on the two HTTP servers that we expect will comprise of the majority of production ASP.NET 5.0 deployments: the new kid on the block, Kestrel, and the old, reliable IIS. 
 
-### Kestrel
+## DNX Processes
+
+Before we get into HTTP servers and ASP.NET 5.0, it's worth taking a detour to look at how the process model for .NET applications in general have changed with DNX. 
+
+Take this simple C# console application:
+
+```
+using System;
+using System.Threading;
+
+namespace MyApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello, world!");
+            Thread.Sleep(10000);
+        }
+    }
+}
+```
+
+Before DNX, this code would get compiled into an `.exe` file. The top of the `.exe` file would contain a small bit of native code that would check the .NET runtime is installed, then load the runtime, and then the runtime would run the rest of the application. In task manager, you would see your executable as the top process:
+
+IMAGE
+
+Under DNX, this changes. Firstly, in development, there is no compilation step - code is compiled on the fly with Roslyn, so you'll never see a `.dll` or `.exe` in the first place. When you are ready to ship the application, though, you'll eventually compile it. You do this using `dnu`:
+
+```
+dnu publish --no-source
+```
+
+Instead of creating a `.exe` as you might expect, the code is actually compiled into a `.dll` inside a directory structure. The directories contain the application bundled as a NuGet package, plus various JSON configuration files. At the root is a `.cmd` batch file which invokes the application:
+
+IMAGE
+
+The batch file invokes DNX.exe (the actual batch file is longer than this - snipped for brevity):
+
+```
+IF "%DNX_PATH%" == "" (
+  SET "DNX_PATH=dnx.exe"
+)
+@"%DNX_PATH%" --project "%~dp0packages\MyApp-DNX\1.0.0\root" --configuration Debug MyApp %*
+```
+
+The MyApp file without the extension is a shell script, so the same application can run on Linux:
+
+```
+exec "dnx" --project "$DIR/packages/MyApp-DNX/1.0.0/root" --configuration Debug MyApp "$@"
+```
+
+The trick that DNX uses is similar to how Java applications run. Java applications aren't compiled into an `.exe`, they just ship as a `.jar` file which is then loaded by the Java executable:
+
+```
+java.exe myapp.jar
+```
+
+Something you'll notice is that if you look in task manager, you won't see the name of your console app anywhere - just DNX. In fact I'm not even sure which one of these three DNX processes contains my application: 
+
+IMAGE
+
+A good way to figure that out is by using SysInternals Process Explorer: 
+
+IMAGE
+
+One of the great benefits of DNX is that if your application targets CoreCLR, the runtime can be distributed with your application. You can now see how this can work - since the CoreCLR includes DNX.exe, all you need to do is distribute the CoreCLR runtime files with your application, and your batch file will invoke that DNX version. You can bundle the runtime and have your batch file call that simply by specifying the option when publishing:
+
+```
+dnu publish --runtime active --no-source
+```
+
+A> ## Room for improvement? 
+A> Personally, I think this folder structure is a bit messy and makes this seem more complicated than it should be. There's a good opportunity to hide all of these etails by keeping the shell script and batch file, but compressing the rest of the files into a NuGet package. `dnx myapp.1.0.0.nupkg` would be much neater. 
+
+## Kestrel
 
 Kestrel is a cross-platform, open source HTTP server for ASP.NET 5.0. It's built by the same team at Microsoft that built ASP.NET 5.0, and it allows ASP.NET 5.0 applications to run consistently across Windows, Linux, and OSX. 
-
 Where web servers like IIS and Apache are designed to be general-purpose web servers, with support for many languages and features like directory browsing and static content serving, Kestrel is designed specifically for hosting ASP.NET 5.0. Architectually, Kestrel builds on top of:
 
  - **libuv**, the open source asynchronous event library used by Node.js. This provides asynchronous TCP sockets to Kestrel in an OS-agnostic manner. 
