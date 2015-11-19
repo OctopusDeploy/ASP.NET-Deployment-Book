@@ -49,7 +49,7 @@ namespace MyApp
 
 Before DNX, this code would get compiled into an `.exe` file. The top of the `.exe` file would contain a small bit of native code that would check the .NET runtime is installed, then load the runtime, and then the runtime would run the rest of the application. In task manager, you would see your executable as the top process:
 
-IMAGE
+![A .NET console application built and running prior to DNX](images/myapp-taskmgr-legacy.png)
 
 Under DNX, this changes. Firstly, in development, there is no compilation step - code is compiled on the fly with Roslyn, so you'll never see a `.dll` or `.exe` in the first place. When you are ready to ship the application, though, you'll eventually compile it. You do this using `dnu`:
 
@@ -59,7 +59,7 @@ dnu publish --no-source
 
 Instead of creating a `.exe` as you might expect, the code is actually compiled into a `.dll` inside a directory structure. The directories contain the application bundled as a NuGet package, plus various JSON configuration files. At the root is a `.cmd` batch file which invokes the application:
 
-IMAGE
+![A .NET console application built and running under DNX](images/myapp-taskmgr-dnx.png)
 
 The batch file invokes DNX.exe (the actual batch file is longer than this - snipped for brevity):
 
