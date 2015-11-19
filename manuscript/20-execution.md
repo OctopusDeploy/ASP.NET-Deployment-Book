@@ -45,7 +45,7 @@ namespace MyApp
 }
 ```
 
-Before DNX, this code would get compiled into an `.exe` file. The top of the `.exe` file would contain a small bit of native code that would check the .NET runtime is installed, then load the runtime, and then the runtime would run the rest of the application. In task manager, you would see your executable as the top process:
+Before DNX, this code would get compiled into an `.exe` file. The top of the `.exe` file would contain a small bit of native code that would check the .NET runtime is installed globally, then load the runtime, and then the runtime would run the rest of the application. In task manager, you would see your executable as the top process:
 
 ![A .NET console application built and running prior to DNX](images/myapp-taskmgr-legacy.png)
 
