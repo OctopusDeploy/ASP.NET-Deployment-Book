@@ -1,34 +1,32 @@
-# Execution, Web Servers and Platforms
+# .NET Execution Environment (DNX)
 
-This chapter will cover:
+To understand how ASP.NET 5.0 applications will run in production, it helps to first understand what .NET Core and DNX are. In this chapter, we'll take some time to understand them, and to understand some of the changes to how .NET applications run under DNX. 
 
- - What does an ASP.NET 5.0 app look like in production? What files are needed, what is the directory structure?
- - Does it run on Windows Server, on Linux? In EC2 or Azure websites? In Docker? 
- - Is it self-hosted with Kestrel or will it be hosted inside IIS? 
- - Where will production configuration data come from? 
- 
-It will drill into the `dnu publish` command as a way to prepare the app. 
+## Runtimes: .NET Framework vs. .NET Core
 
-At the end of this chapter, readers will have a good understanding of exactly what ASP.NET apps would ideally look like when deployed in production. 
-They'll understand that the Roslyn thing is OK for local development or Azure websites, but not so suited to repeatable production deployments. If necessary, they could manually deploy an ASP.NET 5.0 app to a production IIS box. 
+When .NET Framework 4.0 shipped, it came bundled with Windows Server 2012, and as a 48MB MSI for older versions of Windows. The .NET Framework contains just about everything, from UI toolkits (WPF and Windows Forms), to communication libraries (WCF/HTTP), to web application stacks (ASP.NET Web Forms). Because the framework ships as one big package, it's difficult to tease components apart, to iterate on them, or to ever remove something from them. 
 
--------
+To combat this, and to take .NET cross platform, ".NET Core" was created. This is a new take on the CLR, which has been mercilessly factored into small assemblies that are available as packages on NuGet. 
 
-In the ASP.NET world, "Production" for an application always meant running on a version of Windows Server, and running under IIS. As we discussed in chapter 1, ASP.NET 5.0 is about choice. And that means:
+When thinking about production, .NET Core has a major benefit. Remember when .NET Framework 4.5 shipped, and you really wanted to use it, but you had to wait for IT to test that it didn't break any of the other applications before you could deploy anything with it? 
 
- - **A choice of operating systems**  
-   Production servers might run Windows Server 2012 R2, or they might equally run a Linux distribution like Ubuntu Server. While ASP.NET 5.0 applications that target the desktop CLR will still require Windows, the CoreCLR is cross platform. 
+With .NET Core, that problem completely goes away. Just ship whatever version of the CLR you want with your app. You can bundle your application, and the .NET Core CLR, and all your dependencies, and ship them without users needing to install anything. 
 
- - **A choice of web servers**  
- IIS has been the dominant Windows web server, and is still supported for ASP.NET 5.0. But since ASP.NET 5.0 builds on top of OWIN, any HTTP server that can host OWIN can host ASP.NET 5.0. 
+.NET Core is also cross platform, and runs on Linux and OSX and is supported by Microsoft. 
 
-In this chapter, we'll first look at how the process model for DNX applications has changed. We'll then focus on the two HTTP servers that we expect will comprise of the majority of production ASP.NET 5.0 deployments: the new kid on the block, Kestrel, and the old, reliable IIS. 
+At the moment, types are being painstakingly made cross platform and tested to move them to .NET Core, so the surface area of .NET Core right now is much more limited than what's available with the full .NET Framework. I expect that in time, most of what is still relevant will eventually be available on .NET Core, but for now it's pretty focussed on ASP.NET MVC and WebAPI applications. In addition, most third party packages on NuGet target .NET Framework, not .NET Core, so it's going to take a few years before the .NET Core ecosystem has a big enough surface area to make the .NET Framework obsolete. 
 
-## DNX Processes
+For this reason, ASP.NET 5.0 targets both the .NET Framework, and .NET Core. That is, you can make use of new features and architectural improvements in ASP.NET 5.0, but still use the regular desktop .NET runtime without being limited to the .NET Core surface area. 
 
-Before we get into HTTP servers and ASP.NET 5.0, it's worth taking a detour to look at how the process model for .NET applications in general have changed with DNX. 
+When you sit down to build an ASP.NET 5.0 application, it's very unlikely that you'll target both .NET Core and .NET Framework. You'll make a choice:
 
-Take this simple C# console application:
+TABLE: Light and cross platform, or lots of power but stuck on Windows
+
+However, class libraries and some utility tools will start to be built targetting both runtimes. 
+
+## Execution: DNX
+
+Instead of trying to explain what DNX is, let's first just take a look at what it does. We'll do it by looking at what it means at the process level. Take this simple C# console application:
 
 ```
 using System;
@@ -51,7 +49,9 @@ Before DNX, this code would get compiled into an `.exe` file. The top of the `.e
 
 ![A .NET console application built and running prior to DNX](images/myapp-taskmgr-legacy.png)
 
-Under DNX, this changes. Firstly, in development, there is no compilation step - code is compiled on the fly with Roslyn, so you'll never see a `.dll` or `.exe` in the first place. When you are ready to ship the application, though, you'll eventually compile it. You do this using `dnu`:
+Under DNX, this all changes. Firstly, I get to choose my runtime. Will this console application target the .NET Framework, .NET Core, or both? 
+
+Secondly, in development, there is no compilation step - code is compiled on the fly with Roslyn, so you'll never see a `.dll` or `.exe` in the first place when you hit F5 locally. When you are ready to ship the application, though, you'll eventually compile it. You do this using the `dnu` tool:
 
 ```
 dnu publish --no-source
@@ -61,7 +61,7 @@ Instead of creating a `.exe` as you might expect, the code is actually compiled 
 
 ![Output from building and publishing the console application](images/dnu-console-output.png)
 
-The batch file invokes `DNX.exe` (the actual batch file is longer than this - snipped for brevity):
+The batch file invokes `DNX.exe` (the actual batch file is longer than this - snipped for brevity). This tool is called the DNX Application Host, and it takes care of running applications built for DNX:
 
 ```
 IF "%DNX_PATH%" == "" (
@@ -100,72 +100,3 @@ A> ## Room for improvement?
 A> Personally, I think this folder structure is a bit messy and makes this seem more complicated than it should be. There's a good opportunity to hide all of these etails by keeping the shell script and batch file, but compressing the rest of the files into a NuGet package. `dnx myapp.1.0.0.nupkg` would be much neater. 
 
 Now that you are familiar with how DNX invokes processes, let's look at two HTTP server options for ASP.NET 5.0. 
-
-## Kestrel
-
-Kestrel is a cross-platform, open source HTTP server for ASP.NET 5.0. It's built by the same team at Microsoft that built ASP.NET 5.0, and it allows ASP.NET 5.0 applications to run consistently across Windows, Linux, and OSX. 
-Where web servers like IIS and Apache are designed to be general-purpose web servers, with support for many languages and features like directory browsing and static content serving, Kestrel is designed specifically for hosting ASP.NET 5.0. Architectually, Kestrel builds on top of:
-
- - **libuv**, the open source asynchronous event library used by Node.js. This provides asynchronous TCP sockets to Kestrel in an OS-agnostic manner. 
- - `SslStream`, a .NET framework class to turn an ordinary stream into a TLS stream. This allows Kestrel to support HTTPS, including client-side certificates. On Windows, `SslStream` builds on SChannel, the standard Windows TLS components also used by IIS. 
-
-Kestrel ships as a class library. 
-
-In addition to TCP, Kestrel can also listen on named pipes or UNIX pipes. At first this may seem strange, but we'll explore why this exists a little later. 
-
-Kestrel can be used to host your ASP.NET 5.0 application, or embedded inside your own process. This is handy when building long-running services that sometimes need to present a web interface. 
-
-
-
-### IIS
-
-IIS is a general purpose web server which can also host ASP.NET 5.0. However, the way IIS hosts ASP.NET has changed quite substantially with ASP.NET 5.0. Let's first look at the architecture of IIS and how ASP.NET was traditionally hosted, and how it now works with ASP.NET 5.0. 
-
-#### IIS Architecture
-
-Windows ships with a kernel-mode device driver called HTTP.sys, which listens for HTTP connections and hands them over to an appropriate application. It allows multiple applications to effectively share the same IP/port combinations by performing some HTTP parsing in the kernel before dispatching to the application. For example: 
-
-    http://server:80/app1 -> hosted by IIS
-    http://server:80/app2 -> hosted by a different process
-
-IIS builds on top of HTTP.sys - the request is initially received by HTTP.sys (which also performs some security filtering, like Windows Authentication or client certificates), which in turn hands it to IIS. It then sends the response from IIS back to the client. 
-
-Each application running on IIS belongs to an application pool, and a worker process is created to serve requests to that application pool. This is the w3wp process you'll sometimes see in task manager. If the process runs for significant time, or experiences severe memory leaks and runs out of memory, or hangs, IIS can terminate it and create a new worker process. 
-
-The application pools in IIS then have two different pipeline modes - the classic pipeline mode, which relies on unmanaged ISAPI modules to do the work, and the integrated pipeline mode, where the desktop CLR is loaded into IIS and .NET modules can be used to serve requests. 
-
-#### Changes in ASP.NET 5.0
-
-As of ASP.NET 5.0, the integrated pipeline mode for application pools is obsolete. Instead, ASP.NET 5.0 under IIS actually uses Kestrel! 
-
-The resulting architecture looks like this: 
-
-Diagram showing IIS->W3WP.exe->DNX->Kestrel
-
-Under ASP.NET 5.0:
-
- 1. The client sends a request
- 2. HTTP.sys intercepts the request, sends it to the WWW Service, which then sends it to an application pool worker process
- 3. The worker process hosts a single, unmanaged module WHATEVER
- 4. This module launches DNX, which hosts Kestrel
- 5. The request is forwarded to Kestrel over named pipes
- 6. Kestrel processes the request and returns the response back to the worker process
- 7. The worker process returns the response to HTTP.sys
-
-Just as the worker process runs for hours or days between being recycled, the DNX process hosting Kestrel is created when the worker process is created, and serves multiple requests. 
-
-When I look at this diagram, I do wonder how relevant IIS will remain. In the Linux world, general purpose web servers like Apache seem to have been replaced by application-specific HTTP servers (Node.js processes for example) fronted by something like NGINX which simply proxies requests. IIS has effectively been reduced to this. The integrated pipeline is obsolete, and most of the modules in IIS will probably just become OWIN middleware. 
-
-### WebListener
-
-This just gives you all the problems of HTTP.sys with none of the performance (kernel-mode caching of static content doesn't work anyway). Just use Kestrel. (Though it does provide windows auth - I wonder if Kestrel can)
-
-
-## ASP.NET 5.0 in Production
-
-
-
-## In the olden days
-
-
-HTTPPlatformHandler
