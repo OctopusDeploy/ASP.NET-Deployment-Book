@@ -1,4 +1,4 @@
-# .NET Execution Environment (DNX)
+# Runtimes and Execution
 
 To understand how ASP.NET 5.0 applications will run in production, it helps to first understand what .NET Core and DNX are. In this chapter, we'll take some time to understand them, and to understand some of the changes to how .NET applications run under DNX. 
 
