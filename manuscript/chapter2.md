@@ -10,4 +10,4 @@ This chapter will cover:
 It will drill into the `dnu publish` command as a way to prepare the app. 
 
 At the end of this chapter, readers will have a good understanding of exactly what ASP.NET apps would ideally look like when deployed in production. 
-They'll understand that the Roslyn thing is OK for local development or Azure websites, but not so suited to repeatable production deployments.
+They'll understand that the Roslyn thing is OK for local development or Azure websites, but not so suited to repeatable production deployments. If necessary, they could manually deploy an ASP.NET 5.0 app to IIS. 
