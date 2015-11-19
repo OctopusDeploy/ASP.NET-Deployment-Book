@@ -1,4 +1,4 @@
-# ASP.NET 5.0 in Production
+# Platforms and Web Servers
 
 This chapter will cover:
 
@@ -14,32 +14,32 @@ They'll understand that the Roslyn thing is OK for local development or Azure we
 
 -------
 
-## Platforms and Web Servers
-
 In the ASP.NET world, "Production" for an application always meant running on a version of Windows Server, and running under IIS. As we discussed in chapter 1, ASP.NET 5.0 is about choice. And that means:
 
  - **A choice of operating systems**  
    Production servers might run Windows Server 2012 R2, or they might equally run a Linux distribution like Ubuntu Server. While ASP.NET 5.0 applications that target the desktop CLR will still require Windows, the CoreCLR is cross platform. 
 
  - **A choice of web servers**  
- IIS has been the dominant Windows web server, and is still supported for ASP.NET 5.0. Kestrel is a new cross-platform web server that is designed specifically for ASP.NET 5.0.
+ IIS has been the dominant Windows web server, and is still supported for ASP.NET 5.0. But since ASP.NET 5.0 builds on top of OWIN, any HTTP server that can host OWIN can host ASP.NET 5.0. 
+
+In this chapter, we'll focus on the two HTTP servers that we expect will comprise of the majority of production ASP.NET 5.0 deployments: the new kid on the block, Kestrel, and the old, reliable IIS. 
 
 ### Kestrel
 
-Kestrel is a cross-platform HTTP server, and it allows ASP.NET 5.0 applications to run consistently across Windows, Linux, and OSX. 
+Kestrel is a cross-platform, open source HTTP server for ASP.NET 5.0. It's built by the same team at Microsoft that built ASP.NET 5.0, and it allows ASP.NET 5.0 applications to run consistently across Windows, Linux, and OSX. 
 
-Where web servers like IIS and Apache are designed to be general-purpose web servers, with support for many languages and features like directory browsing and static content serving, Kestrel is designed specifically for hosting ASP.NET 5.0. 
-
-Architectually, Kestrel builds on top of:
+Where web servers like IIS and Apache are designed to be general-purpose web servers, with support for many languages and features like directory browsing and static content serving, Kestrel is designed specifically for hosting ASP.NET 5.0. Architectually, Kestrel builds on top of:
 
  - **libuv**, the open source asynchronous event library used by Node.js. This provides asynchronous TCP sockets to Kestrel in an OS-agnostic manner. 
  - `SslStream`, a .NET framework class to turn an ordinary stream into a TLS stream. This allows Kestrel to support HTTPS, including client-side certificates. On Windows, `SslStream` builds on SChannel, the standard Windows TLS components also used by IIS. 
- 
-In addition to TCP, Kestrel can also listen on named pipes or UNIX pipes. This is something we'll bump into later. 
 
-Kestrel can be used to host your web application, or embedded inside your own process. This is handy when building long-running services that sometimes need to present a web interface. 
+Kestrel ships as a class library. 
 
-Digram showing DNX and user mode. 
+In addition to TCP, Kestrel can also listen on named pipes or UNIX pipes. At first this may seem strange, but we'll explore why this exists a little later. 
+
+Kestrel can be used to host your ASP.NET 5.0 application, or embedded inside your own process. This is handy when building long-running services that sometimes need to present a web interface. 
+
+
 
 ### IIS
 
@@ -92,4 +92,4 @@ This just gives you all the problems of HTTP.sys with none of the performance (k
 ## In the olden days
 
 
-
+HTTPPlatformHandler
