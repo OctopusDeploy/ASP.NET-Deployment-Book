@@ -114,3 +114,7 @@ A> ## Room for improvement?
 A> Personally, I think this folder structure is a bit messy and makes this seem more complicated than it should be. There's a good opportunity to hide all of these etails by keeping the shell script and batch file, but compressing the rest of the files into a NuGet package. `dnx myapp.1.0.0.nupkg` would be much neater. 
 
 Now that you are familiar with how DNX invokes processes, let's look at two HTTP server options for ASP.NET 5.0. 
+
+### Summary
+
+.NET Core is an ambitious attempt to tease apart the monolithic .NET Framework into something that is portable, cross-platform and iterates quickly. DNX is a new way to build and run applications, whether they run on .NET Core *or* .NET Framework. We've looked at how DNX fits in with console applications; in the next chapter we'll look at how DNX executes ASP.NET applications. 
