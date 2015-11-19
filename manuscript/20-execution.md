@@ -15,8 +15,9 @@ To combat this, and to take .NET cross platform, ".NET Core" was created. This i
  - **Lightweight**  
  Only the packages you actually use are imported.  
 
-A> ####Production benefit
-A> The portability aspects of .NET Core have a major production benefit. Remember that time .NET 4.5 shipped, and you really wanted to use features of it, but since it was an in-place upgrade you had to wait for months for it to be tested against all the enterprises other applications before you could use it? 
+A> ####Portability is a major production benefit
+A> Remember when .NET 4.5 shipped, and you really wanted to use features of it, but since it was an in-place upgrade you had to wait for months for it to be tested against all of the enterprise's other applications before you could use it? 
+A>
 A> Under .NET Core, that problem disappears. Different teams can use different versions of .NET Core without any one affecting another. 
 
 I believe that .NET Core is the future, and the only reason .NET Framework isn't obsolete is that it will simply take a long time for types to be made cross platform, tested and ported. As the surface area of .NET Core grows, third party packages will start to target .NET Core, and eventually it will have a big enough surface area to become the default choice for all applications. 
