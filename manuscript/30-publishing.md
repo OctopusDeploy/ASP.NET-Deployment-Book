@@ -11,7 +11,7 @@ DNU is a command-line tool that is part of DNX, and contains a number of utiliti
 Publish a DNX application by calling `dnu publish` from the project directory. Here's what I recommend: 
 
 ```
-dnu publish --runtime active --no-source -o ..\published-webapp
+dnu publish --runtime active --no-source -o ..\published-webapp --configuration Release
 ```
 
 The structure of a published web application looks like this:
