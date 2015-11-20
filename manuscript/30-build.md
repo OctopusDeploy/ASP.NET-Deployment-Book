@@ -43,3 +43,60 @@ If you have more than one target environment, or more than one target server, th
 
 ![Publish your project once, then use the same outputs for subsequent deployments of the same version of the application](images/build-once.png)
 
+## Running with Kestrel
+
+Now that you have published your application, you can test that it runs. Running it under Kestrel is easy. Simply go to the `approot` folder of your published directory, and run the `web.cmd` batch script: 
+
+![Running the published web application with Kestrel](images/run-kestrel.png)
+
+This is made possible by the `commands` element inside your `project.json` file. The `dnu publish` tool takes any commands, and turns them into batch files. In my case, `project.json` contains:
+
+```
+{
+  // snip for brevity...
+  "dependencies": {
+    "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
+    // ...
+  },
+
+  "commands": {
+    "web": "Microsoft.AspNet.Server.Kestrel"
+  }
+}
+```
+
+So the `web.cmd` file that `dnu publish` generates calls DNX over the Kestrel console application, as we saw in the first chapter. Kestrel then listens on a port and serves the application. 
+
+## Running with IIS
+
+The published output folder is also ready to be used by IIS. Simply point IIS at the `wwwroot` folder of the published output: 
+
+![Creating an IIS web application pointing at the `wwwroot` folder](images/iis-add.png)
+
+T> #### Install HTTP Platform Handler
+T> Remember that DNX on IIS [requires the HTTP Platform Handler extension](http://www.iis.net/downloads/microsoft/httpplatformhandler) to be installed.
+
+This is made possible by the small `web.config` file inside `wwwroot`, which tells the worker process to dispatch all requests through the HTTP Platform Handler:
+
+```
+<configuration>
+  <system.webServer>
+    <handlers>
+      <add name="httpplatformhandler" path="*" verb="*" modules="httpPlatformHandler" resourceType="Unspecified" />
+    </handlers>
+    <httpPlatform processPath="..\approot\web.cmd" arguments="" stdoutLogEnabled="false" stdoutLogFile="..\logs\stdout.log" startupTimeLimit="3600"></httpPlatform>
+  </system.webServer>
+</configuration>
+```
+
+Notice how the `processPath` attribute points back to the same `web.cmd` file that we called when we ran the app directly under Kestrel. 
+
+## Logging
+
+Whether you run your application directly under Kestrel or via IIS, DNX is still running as a console application. This means that you can capture log output from the console and send it to the `logs` folder that was created as part of the published output. Simply change the `stdoutLogEnabled` attribute in `web.config` to `true`. 
+
+### Summary
+
+In this chapter we explored `dnu publish`, a new standard way to prepare DNX applications for deployment. We reviewed some best practices like publish once, deploy many times, and saw how to run the application manually under Kestrel or IIS. 
+
+In the next chapters we'll look at automating the publishing and deployment as part of a continuous delivery pipeline. 
