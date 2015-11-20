@@ -28,7 +28,8 @@ The structure of a published web application looks like this:
 
 Remember that DNX applications don't simply run - they have to be run by `DNX.exe`. `DNX.exe` must either be bundled with your application (which is why we pass `--runtime active`), or available on the PATH environment variable. As a developer, you have a version of DNX in your path already, but your production server won't. 
 
-I> The active runtime is defined as a per-user environment variable. You can change the current runtime using `dnvm`, the .NET version manager. 
+I> #### Active runtime? 
+I> The active runtime is defined as a per-user environment variable. You can change the current runtime using `dnvm`, the .NET version manager. It's worth keeping this in mind - sometimes your active runtime will be different to what you might expect. 
 
 ## To compile, or not to compile
 
