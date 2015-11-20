@@ -1,37 +1,27 @@
 # Web Servers
 
-This chapter will cover:
+Historically, there have been very few choices for deploying ASP.NET applications in production. ASP.NET was tightly coupled to IIS, which was tightly coupled to Windows, so the stack was chosen for you. As we discussed in chapter 1, ASP.NET 5.0 is about choice. 
 
- - What does an ASP.NET 5.0 app look like in production? What files are needed, what is the directory structure?
- - Does it run on Windows Server, on Linux? In EC2 or Azure websites? In Docker? 
- - Is it self-hosted with Kestrel or will it be hosted inside IIS? 
- - Where will production configuration data come from? 
- 
-It will drill into the `dnu publish` command as a way to prepare the app. 
-
-At the end of this chapter, readers will have a good understanding of exactly what ASP.NET apps would ideally look like when deployed in production. They'll understand that the Roslyn thing is OK for local development or Azure websites, but not so suited to repeatable production deployments. If necessary, they could manually deploy an ASP.NET 5.0 app to a production IIS box. 
-
--------
-
-In the ASP.NET world, "Production" for an application always meant running on a version of Windows Server, and running under IIS. As we discussed in chapter 1, ASP.NET 5.0 is about choice. And that means:
-
- - **A choice of operating systems**  
-   Production servers might run Windows Server 2012 R2, or they might equally run a Linux distribution like Ubuntu Server. While ASP.NET 5.0 applications that target the desktop CLR will still require Windows, the CoreCLR is cross platform. 
-
- - **A choice of web servers**  
- IIS has been the dominant Windows web server, and is still supported for ASP.NET 5.0. But since ASP.NET 5.0 builds on top of OWIN, any HTTP server that can host OWIN can host ASP.NET 5.0. 
+Of course, IIS is still supported in ASP.NET 5.0. But since ASP.NET 5.0 builds on top of OWIN, any HTTP server that can host OWIN can host ASP.NET 5.0. And since .NET Core is cross-platform and IIS is not, we need new choices for HTTP servers when running ASP.NET 5 outside of Windows. 
 
 In this chapter, we'll focus on the two HTTP servers that we expect will comprise of the majority of production ASP.NET 5.0 deployments: the new kid on the block, Kestrel, and the old, reliable IIS. 
 
 ## Kestrel
 
 Kestrel is a cross-platform, open source HTTP server for ASP.NET 5.0. It's built by the same team at Microsoft that built ASP.NET 5.0, and it allows ASP.NET 5.0 applications to run consistently across Windows, Linux, and OSX. 
+
 Where web servers like IIS and Apache are designed to be general-purpose web servers, with support for many languages and features like directory browsing and static content serving, Kestrel is designed specifically for hosting ASP.NET 5.0. Architectually, Kestrel builds on top of:
 
- - **libuv**, the open source asynchronous event library used by Node.js. This provides asynchronous TCP sockets to Kestrel in an OS-agnostic manner. 
- - `SslStream`, a .NET framework class to turn an ordinary stream into a TLS stream. This allows Kestrel to support HTTPS, including client-side certificates. On Windows, `SslStream` builds on SChannel, the standard Windows TLS components also used by IIS. 
+ - **`libuv`**, the open source asynchronous event library used by Node.js. This provides asynchronous TCP sockets to Kestrel in an OS-agnostic manner. 
+ - **`SslStream`**, a .NET framework class to turn an ordinary stream into a TLS stream. This allows Kestrel to support HTTPS, including client-side certificates. On Windows, `SslStream` builds on `SChannel`, the standard Windows TLS components also used by IIS. In practical terms, this means that HTTPS with Kestrel is as secure as HTTPS with IIS. 
 
-Kestrel ships as a class library. 
+Kestrel is entirely user-mode and binds to a TCP port directly to listen for requests. 
+
+
+
+
+
+
 
 In addition to TCP, Kestrel can also listen on named pipes or UNIX pipes. At first this may seem strange, but we'll explore why this exists a little later. 
 
