@@ -15,28 +15,22 @@ Where web servers like IIS and Apache are designed to be general-purpose web ser
  - **`libuv`**, the open source asynchronous event library used by Node.js. This provides asynchronous TCP sockets to Kestrel in an OS-agnostic manner. 
  - **`SslStream`**, a .NET framework class to turn an ordinary stream into a TLS stream. This allows Kestrel to support HTTPS, including client-side certificates. On Windows, `SslStream` builds on `SChannel`, the standard Windows TLS components also used by IIS. In practical terms, this means that HTTPS with Kestrel is as secure as HTTPS with IIS. 
 
-Kestrel is entirely user-mode and binds to a TCP port directly to listen for requests. 
+Kestrel is entirely user-mode and binds to a TCP port directly to listen for requests. Kestrel can be used to run your ASP.NET 5.0 application, or embedded inside your own process. This is handy when building long-running services that sometimes need to present a web interface. 
 
+![Request processing in Kestrel](images/kestrel-request.png)
 
-
-
-
-
-
-In addition to TCP, Kestrel can also listen on named pipes or UNIX pipes. At first this may seem strange, but we'll explore why this exists a little later. 
-
-Kestrel can be used to host your ASP.NET 5.0 application, or embedded inside your own process. This is handy when building long-running services that sometimes need to present a web interface. 
+In addition to TCP, Kestrel can also listen on named pipes or UNIX pipes. At first this may seem strange, but it will make sense in a moment. 
 
 ## IIS
 
-IIS is a general purpose web server which can also host ASP.NET 5.0. However, the way IIS hosts ASP.NET has changed quite substantially with ASP.NET 5.0. Let's first look at the architecture of IIS and how ASP.NET was traditionally hosted, and how it now works with ASP.NET 5.0. 
+IIS is a general purpose web server which can also host ASP.NET 5.0. However, the way IIS hosts ASP.NET 5.0 is dramatically different than previous versions of IIS. Let's first look at the architecture of IIS and how ASP.NET was traditionally hosted, and how it now works with ASP.NET 5.0. 
 
 ### IIS Architecture
 
 Windows ships with a kernel-mode device driver called HTTP.sys, which listens for HTTP connections and hands them over to an appropriate application. It allows multiple applications to effectively share the same IP/port combinations by performing some HTTP parsing in the kernel before dispatching to the application. For example: 
 
-    http://server:80/app1 -> hosted by IIS
-    http://server:80/app2 -> hosted by a different process
+    http://server:80/app1   # hosted by IIS
+    http://server:80/app2   # hosted by a different process
 
 IIS builds on top of HTTP.sys - the request is initially received by HTTP.sys (which also performs some security filtering, like Windows Authentication or client certificates), which in turn hands it to IIS. It then sends the response from IIS back to the client. 
 
