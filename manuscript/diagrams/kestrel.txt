@@ -1,0 +1,9 @@
+title Requests with Kestrel
+
+Client->+DNX.exe (Kestrel): Request
+note right of DNX.exe (Kestrel): 
+    - OWIN middleware
+    - ASP.NET 5.0
+    - Your code
+end note
+DNX.exe (Kestrel)->Client: Response
