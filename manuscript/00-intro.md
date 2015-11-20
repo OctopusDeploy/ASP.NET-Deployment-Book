@@ -23,8 +23,7 @@ This book won't teach you how to *develop* ASP.NET 5 applications. There are ple
 
 The goal of this book is to walk you through these changes, and to give you everything you need to successfully deploy your first ASP.NET 5 application to production. 
 
-## Work in progress
-
-This book is a work in progress. It's based on ASP.NET 5 RC1, and it's being written as we learn more about the platform. Follow the progress on the book by adding it to your cart in Leanpub:  
-
-https://leanpub.com/aspnetdeployment
+I> #### Work in progress
+I> This book is a work in progress. It's based on ASP.NET 5 RC1, and it's being written as we learn more about the platform. Follow the progress on the book by adding it to your cart in Leanpub:  
+I>
+I> https://leanpub.com/aspnetdeployment
