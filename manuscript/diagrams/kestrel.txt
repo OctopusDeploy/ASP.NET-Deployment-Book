@@ -1,5 +1,3 @@
-title Requests with Kestrel
-
 Client->+DNX.exe (Kestrel): Request
 note right of DNX.exe (Kestrel): 
     - OWIN middleware
