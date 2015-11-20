@@ -1,5 +1,3 @@
-title Requests with IIS in ASP.NET 5.0
-
 Client->HTTP.sys: Request
 HTTP.sys->SVCHost.exe (WAS+WWW): Request
 SVCHost.exe (WAS+WWW)-->*W3WP.exe Worker Process: Ensure worker process
