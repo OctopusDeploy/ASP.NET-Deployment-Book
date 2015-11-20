@@ -1,4 +1,10 @@
-# Build automation
+# Publishing Appliations for Deployment
+
+In this chapter, we'll take a deep look into how 
+
+## Publishing with DNU
+
+
 
 This chapter will teach people how to automate builds with TeamCity and VS Online. 
 
