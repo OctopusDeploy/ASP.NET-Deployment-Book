@@ -1,7 +1,7 @@
 00-intro.md
 20-execution.md
 25-http.md
-30-build.md
+30-publishing.md
 40-msdeploy.md
 50-octopus.md
 60-advanced.md
