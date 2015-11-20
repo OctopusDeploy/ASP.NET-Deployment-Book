@@ -1,6 +1,8 @@
 # Publishing Appliations for Deployment
 
-In this chapter, we'll take a deep look into how to publish your ASP.NET 5 application so that you can deploy it for other people to use. We'll look at publishing with the `dnu` utility in detail, and discuss some of the options to consider when deciding how to publish. 
+In this chapter, we'll take a deep look into how to publish your ASP.NET 5 application so that you can deploy it for other people to use. Rather than spend time on wizards in Visual Studio, we'll concentrate on using the command line to publish, so that we can automate it as part of our automated build and deployment process.  
+
+Prior to ASP.NET 5, publishing applications from the command line was arcane and fiddly. The good news is that it gets much, much easier with the new `dnu` tool. 
 
 ## Publishing with DNU
 
