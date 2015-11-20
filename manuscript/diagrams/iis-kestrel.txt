@@ -8,13 +8,13 @@ note right of W3WP.exe Worker Process:
 end note
 HTTP.sys->W3WP.exe Worker Process: Request
 W3WP.exe Worker Process-->*DNX.exe (Kestrel): Starts
-W3WP.exe Worker Process->DNX.exe (Kestrel): Request
+W3WP.exe Worker Process->+DNX.exe (Kestrel): Request
 note right of DNX.exe (Kestrel): 
     - OWIN middleware
     - ASP.NET 5.0
     - Your code
 end note
 
-DNX.exe (Kestrel)->W3WP.exe Worker Process: Response
+DNX.exe (Kestrel)->-W3WP.exe Worker Process: Response
 W3WP.exe Worker Process->HTTP.sys: Response
 HTTP.sys->Client: Response
