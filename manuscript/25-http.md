@@ -76,7 +76,7 @@ On the other hand, the responsibilities of IIS have been dramatically reduced to
 
 TODO: I need to confirm how other managed modules still work in this model. The HTTP Platform Handler extension is added and accepts all requests, but it doesn't remove any other modules, so presumably the CLR is still loaded into the worker process to call some of the native IIS modules. 
 
-## Summary
+### Summary
 
 The hosting architecture of ASP.NET 5 is radically different to previous versions, and for good reasons. By decoupling ASP.NET from IIS, a lot of choice is available and the team can iterate much more quickly. And yet IIS is still supported, acting as a reverse proxy instead of a web server, borrowing from the model of other web stacks. And there's still a lot of consistency: whichever approach you use, it's will still be ASP.NET hosted in Kestrel/DNX. 
 
