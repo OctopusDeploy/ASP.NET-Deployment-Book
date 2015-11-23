@@ -3,4 +3,3 @@
 25-http.md
 30-publishing.md
 50-octopus.md
-60-advanced.md
