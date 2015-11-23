@@ -1,9 +1,15 @@
 # Deployment with Octopus
 
-This section will talk about how to automate deployments with Octopus. 
+Blah blah Octopus.
 
-It will cover:
+## Introducing Octopus Deploy
 
- - Why Octopus is a better choice than MSDeploy
- - Taking the `dnu publish` outputs and packaging them for deployment
- - Deployment process in Octopus
+## Setting up the environment
+
+## Deployment process
+
+## Configuration and AppSettings.json
+
+## Deployment
+
+### Summary
