@@ -1,4 +1,4 @@
-# ASP.NET 5 Application Deployment Guide
+### ASP.NET 5 Application Deployment Guide
 
 This is the GitHub repository for the mini ebook: [_ASP.NET 5 Application Deployment Guide_](https://leanpub.com/aspnetdeployment). 
 
