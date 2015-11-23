@@ -1,6 +1,6 @@
 # Introduction
 
-ASP.NET was first released in 2002. In the last decade, it has undergone significant changes and investment by Microsoft. From Web Forms to MVC and Web API, from ASP.NET AJAX to SignalR, ASP.NET has never stood still. And yet the architecture that underpins the platform never really changed: ASP.NET was coupled to IIS, IIS was coupled to Windows. The .NET runtime is installed globally and new versions were only released once every couple of years. 
+ASP.NET was first released in 2002. Over the last decade, it has undergone significant changes and investment by Microsoft. From Web Forms to MVC and Web API, from ASP.NET AJAX to SignalR, ASP.NET has never stood still. And yet the architecture that underpins the platform never really changed: ASP.NET was coupled to IIS, IIS was coupled to Windows. The .NET runtime is installed globally and new versions were only released once every couple of years. 
 
 ASP.NET 5 isn't just a few new features with a major version stamp. It's a significant architectural rebuild of the platform underneath ASP.NET. ASP.NET 5 is all about choice:
 
