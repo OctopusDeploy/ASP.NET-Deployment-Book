@@ -82,9 +82,13 @@ This is made possible by the small `web.config` file inside `wwwroot`, which tel
 <configuration>
   <system.webServer>
     <handlers>
-      <add name="httpplatformhandler" path="*" verb="*" modules="httpPlatformHandler" resourceType="Unspecified" />
+      <add name="httpplatformhandler" path="*" verb="*" 
+           modules="httpPlatformHandler" resourceType="Unspecified" />
     </handlers>
-    <httpPlatform processPath="..\approot\web.cmd" arguments="" stdoutLogEnabled="false" stdoutLogFile="..\logs\stdout.log" startupTimeLimit="3600"></httpPlatform>
+    <httpPlatform processPath="..\approot\web.cmd" arguments="" 
+        stdoutLogEnabled="false" stdoutLogFile="..\logs\stdout.log" 
+        startupTimeLimit="3600">
+    </httpPlatform>
   </system.webServer>
 </configuration>
 ```
