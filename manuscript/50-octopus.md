@@ -1,6 +1,6 @@
 # Deployment with Octopus
 
-Blah blah Octopus.
+In this chapter, we will set up an automated deployment pipeline of our application using Octopus Deploy. 
 
 ## Introducing Octopus Deploy
 
