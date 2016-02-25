@@ -23,6 +23,15 @@ This book won't teach you how to *develop* ASP.NET 5 applications. There are ple
 
 The goal of this book is to walk you through these changes, and to give you everything you need to successfully deploy your first ASP.NET 5 application to production. 
 
+## Target environments
+
+This book covers deployments to servers that you configure and manage yourself. That includes:
+
+ - Infrastructure-as-a-service (IaaS) offerings, including from Amazon (EC2) and Microsoft Azure (Virtual Machines)
+ - Your own on-premises Windows Server instances
+
+This book doesn't cover deployment to Platform-as-a-service (PaaS) offerings, like Microsoft Azure Web Apps.  
+
 I> #### Work in progress
 I> This book is a work in progress. It's based on ASP.NET 5 RC1, and it's being written as we learn more about the platform. Follow the progress on the book by adding it to your cart in Leanpub:  
 I>
